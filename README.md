@@ -68,3 +68,14 @@ Dentro da pasta webapp <br>
 Para fazer login: <br>
 user: user<br>
 senha: user<br>
+
+
+### GUIDELINE
+
+As funcionalidades do app de licitação são:
+
+<ol>
+    <li> Manter Empresas</li>
+    <li> Manter Licitações</li>
+    <li> Manter Ofertas </li>
+</ol>
