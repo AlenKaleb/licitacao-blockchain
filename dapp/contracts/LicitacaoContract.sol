@@ -35,6 +35,7 @@ contract LicitacaoContract {
 
     struct Oferta {
         uint id;
+        uint empresaId;
         uint licitacaoId;
         string data;
         uint valor;
@@ -56,6 +57,10 @@ contract LicitacaoContract {
 
     function adicionarEmpresa(string memory _razaoSocial, uint _cnpj, string memory _telefone) public {
 
+        require(bytes(_razaoSocial).length >= 1, "Razao social é obrigatório");
+        require(_cnpj > 0, "Informe um cnpj");
+        require(bytes(_telefone).length >= 11 , "Informe um telefone celular com (DDD)");
+
         empresas[empresaId] = Empresa(empresaId, _razaoSocial, _cnpj, _telefone, msg.sender);
         empresasIds.push(empresaId);
         empresaId++;
@@ -64,6 +69,10 @@ contract LicitacaoContract {
 
     function alterarEmpresa(uint _id, string memory _razaoSocial, uint _cnpj, string memory _telefone) public {
 
+        require(bytes(_razaoSocial).length >= 1, "Razao social é obrigatório");
+        require(_cnpj > 0, "Informe um cnpj");
+        require(bytes(_telefone).length >= 11 , "Informe um telefone celular com (DDD)");
+        
         Empresa storage emp = empresas[_id];
 
         emp.razaoSocial = _razaoSocial;
@@ -114,6 +123,12 @@ contract LicitacaoContract {
         string memory _titulo, uint _codigo, string memory _dataInicio, string memory _dataFim, string memory _status
         ) public {
 
+        require(bytes(_titulo).length >= 1, "O titulo é obrigatório");
+        require(_codigo > 0, "Codigo inválido");
+        require(bytes(_dataInicio).length == 10, "Informe uma data de inicio 10/08/2020");
+        require(bytes(_dataFim).length == 10, "Informe uma data de termino 20/08/2020");
+        require(bytes(_status).length >= 1 , "Informe um status válido");
+
         licitacoes[licitacaoId] = Licitacao(licitacaoId, _titulo, _codigo, _dataInicio, _dataFim, _status, msg.sender);
         licitacoesIds.push(licitacaoId);
         licitacaoId++;
@@ -124,6 +139,12 @@ contract LicitacaoContract {
     function alterarLicitacao(
         uint _id, string memory _titulo, uint _codigo, string memory _dataInicio, string memory _dataFim, string memory _status
         ) public {
+
+        require(bytes(_titulo).length >= 1, "O titulo é obrigatório");
+        require(_codigo > 0, "Codigo inválido");
+        require(bytes(_dataInicio).length == 10, "Informe uma data de inicio 10/08/2020");
+        require(bytes(_dataFim).length == 10, "Informe uma data de termino 20/08/2020");
+        require(bytes(_status).length >= 1 , "Informe um status válido");
 
         Licitacao storage licitacao = licitacoes[_id];
 
@@ -181,18 +202,29 @@ contract LicitacaoContract {
         return (idsLicitacoes, titulos, codigos, datasInicio, datasFim, status, owners);
     }
 
-    function adicionarOferta(uint _licitacaoId, string memory _data, uint _valor) public {
+    function adicionarOferta(uint _empresaId, uint _licitacaoId, string memory _data, uint _valor) public {
 
-        ofertas[ofertaId] = Oferta(ofertaId, _licitacaoId, _data, _valor, msg.sender);
+        require(_licitacaoId >= 0, "Licitação é obrigatório");
+        require(_empresaId >= 0, "Empresa é obrigatório");
+        require(_valor > 0, "Informe uma valor válido");
+        require(bytes(_data).length == 10, "Informe uma data 05/08/2020");
+        
+        ofertas[ofertaId] = Oferta(ofertaId, _empresaId, _licitacaoId, _data, _valor, msg.sender);
         ofertasIds.push(ofertaId);
         ofertaId++;
         emit ofertaRegistered(ofertaId - 1, "Oferta cadastrada com sucesso");
     }
 
-    function alterarOferta(uint _id, uint _licitacaoId, string memory _data, uint _valor) public {
+    function alterarOferta(uint _id, uint _empresaId, uint _licitacaoId, string memory _data, uint _valor) public {
 
+        require(_licitacaoId >= 0, "Licitação é obrigatório");
+        require(_empresaId >= 0, "Empresa é obrigatório");
+        require(_valor > 0, "Informe uma valor válido");
+        require(bytes(_data).length == 10, "Informe uma data 05/08/2020");
+        
         Oferta storage oferta = ofertas[_id];
 
+        oferta.empresaId = _empresaId;
         oferta.licitacaoId = _licitacaoId;
         oferta.data = _data;
         oferta.valor = _valor;
@@ -203,7 +235,8 @@ contract LicitacaoContract {
     function ofertaInfo(uint _id) public view
         returns(
             uint,
-            uint,
+            Empresa memory,
+            Licitacao memory,
             string memory,
             uint,
             address
@@ -213,28 +246,31 @@ contract LicitacaoContract {
 
             return (
                 oferta.id,
-                oferta.licitacaoId,
+                empresas[oferta.empresaId],
+                licitacoes[oferta.licitacaoId],
                 oferta.data,
                 oferta.valor,
                 oferta.owner
             );
     }
 
-    function listarOfertas() public view returns(uint[] memory, uint[] memory, string[] memory, uint[] memory, address[] memory) {
+    function listarOfertas() public view returns(
+        uint[] memory, Empresa[] memory, Licitacao[] memory, string[] memory, uint[] memory, address[] memory) {
 
         uint[] memory ids = ofertasIds;
 
         uint[] memory idsOfertas = new uint[](ids.length);
-        uint[] memory licitacoesIds = new uint[](ids.length);
+        Licitacao[] memory licit = new Licitacao[](ids.length);
+        Empresa[] memory emp = new Empresa[](ids.length);
         string[] memory datas = new string[](ids.length);
         uint[] memory valores = new uint[](ids.length);
         address[] memory owners = new address[](ids.length);
 
         for (uint i = 0; i < ids.length; i++) {
-            (idsOfertas[i], licitacoesIds[i], datas[i], valores[i], owners[i]) = ofertaInfo(i);
+            (idsOfertas[i], emp[i], licit[i], datas[i], valores[i], owners[i]) = ofertaInfo(i);
         }
 
-        return (idsOfertas, licitacoesIds, datas, valores, owners);
+        return (idsOfertas, emp, licit, datas, valores, owners);
     }
 
 }

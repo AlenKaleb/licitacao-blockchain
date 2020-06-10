@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
     let url = new URL(url_string);
     licitacaoId = parseInt(url.searchParams.get("id"), 10);
 
-    if(licitacaoId >= 0){
+    if(licitacaoId || licitacaoId.toString() == '0'){
         
         let form = document.getElementById("formLicitacao");
 

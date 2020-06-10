@@ -55,7 +55,13 @@
                 <div class="row justify-content-center">
                     <div class="col-md-7">
                         <form id="formOferta">
-                         <div class="form-group">
+                            <div class="form-group">
+                                <label for="empresaId">Empresa:</label>
+                                <select class="form-control" id="empresaId" placeholder="Selecione uma empresa" required>
+                                    <option value="">Selecione um item</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="licitacaoId">Licitacao:</label>
                                 <select class="form-control" id="licitacaoId" placeholder="Selecione uma licitação" required>
                                     <option value="">Selecione um item</option>
@@ -69,7 +75,7 @@
                                 <label for="valor">Valor:</label>
                                 <input type="text" min="1" class="form-control" id="valor" placeholder="Informe o valor" required>
                             </div>
-                           
+                            
                             <input type="hidden" class="form-control" id="tipoForm">
                             <button id="load" type="submit" class="btn btn-primary btn-block">Salvar</button>
                         </form>

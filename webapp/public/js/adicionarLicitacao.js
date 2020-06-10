@@ -4,7 +4,7 @@ window.addEventListener("load", function() {
     licitacaoId = parseInt(url.searchParams.get("id"), 10);
     console.log(licitacaoId);
 
-    if(licitacaoId != NaN){
+    if(licitacaoId.toString() == 'NaN'){
         // restaga formulário de produtos
         let form = document.getElementById("formLicitacao");
 

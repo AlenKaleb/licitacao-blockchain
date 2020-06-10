@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
     let url = new URL(url_string);
     empresaId = parseInt(url.searchParams.get("id"), 10);
 
-    if(empresaId >= 0){
+    if(empresaId || empresaId.toString() == '0'){
         
         let form = document.getElementById("formEmpresa");
 

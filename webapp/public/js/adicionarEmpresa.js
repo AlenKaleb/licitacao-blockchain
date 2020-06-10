@@ -3,7 +3,9 @@ window.addEventListener("load", function() {
     let url = new URL(url_string);
     empresaId = parseInt(url.searchParams.get("id"), 10);
 
-    if(empresaId != NaN){
+    this.console.log(empresaId.toString());
+
+    if(empresaId.toString() == 'NaN'){
         // restaga formulário de produtos
         let form = document.getElementById("formEmpresa");
 

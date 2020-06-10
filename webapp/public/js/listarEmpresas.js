@@ -26,7 +26,7 @@ function listarEmpresas() {
 
                 cols += `<td> ${razaoSocial} </td>`;
                 cols += `<td> ${cnpj} </td>`;
-                cols += `<td> ${telefone.substring(1, 10)} </td>`;
+                cols += `<td> ${telefone} </td>`;
                 cols += `<td align="center"> 
                     <span style="font-size: 1em; color: Dodgerblue; cursor: pointer; ">
                         <a href="/editarEmpresa?id=${empresas[i].id}"><i class="fas fa-edit"></i></a>

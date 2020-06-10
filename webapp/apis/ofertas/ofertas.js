@@ -58,14 +58,14 @@ module.exports = {
             console.log(req.body);
 
             let userAddr = req.session.address;
-            const { licitacaoId, data, valor } = req.body;
+            const { empresaId, licitacaoId, data, valor } = req.body;
             let pass = req.session.password;
 
             try {
                 let accountUnlocked = await web3.eth.personal.unlockAccount(userAddr, pass, null)
                 if (accountUnlocked) {
 
-                    await LicitacaoContract.methods.adicionarOferta(licitacaoId, data, valor)
+                    await LicitacaoContract.methods.adicionarOferta(empresaId, licitacaoId, data, valor)
                         .send({ from: userAddr, gas: 3000000 })
                         .then(function(result) {
                             console.log(result);
@@ -89,20 +89,21 @@ module.exports = {
         } else {
         
             let ofertaId = req.body.ofertaId;
+            let empresaId = req.body.empresaId;
             let licitacaoId = req.body.licitacaoId;
             let data   = req.body.data;
             let valor   = req.body.valor;
             let userAddr = req.session.address;
             let pass     = req.session.password;
 
-            console.log("apis -> ofertas -> alterarOfertas: ", userAddr, ofertaId, licitacaoId, data, valor);
+            console.log("apis -> ofertas -> alterarOfertas: ", userAddr, ofertaId, empresaId, licitacaoId, data, valor);
 
             try {
                 let accountUnlocked = await web3.eth.personal.unlockAccount(userAddr, pass, null)
                 console.log("Account unlocked?", accountUnlocked);
                 if (accountUnlocked) {
 
-                    await LicitacaoContract.methods.alterarOferta(ofertaId, licitacaoId, data, valor)
+                    await LicitacaoContract.methods.alterarOferta(ofertaId, empresaId, licitacaoId, data, valor)
                         .send({ from: userAddr, gas: 3000000 })
                         .then(receipt => {
                             console.log(receipt);
@@ -134,7 +135,7 @@ module.exports = {
 
                 let ofertas = [];
                 for (i = 0; i < oferta['0'].length; i++) {
-                    ofertas.push({ 'id': +oferta['0'][i], 'licitacaoId': oferta['1'][i], 'data': oferta['2'][i], 'valor': oferta['3'][i], 'addr': oferta['4'][i] });
+                    ofertas.push({ 'id': +oferta['0'][i], 'empresaId': oferta['1'][i], 'licitacaoId': oferta['2'][i], 'data': oferta['3'][i], 'valor': oferta['4'][i], 'addr': oferta['5'][i] });
                 }
 
                 console.log("ofertas", ofertas);
@@ -164,7 +165,7 @@ module.exports = {
                     return res.send({ error: false, msg: "oferta não encontrada"});
                 }
 
-                let oferta = { 'id': +emp['0'], 'licitacaoId': emp['1'], 'data': emp['2'], 'valor': emp['3'], 'addr': emp['4'] }
+                let oferta = { 'id': +emp['0'], 'empresaId': emp['1'], 'licitacaoId': emp['2'], 'data': emp['3'], 'valor': emp['4'], 'addr': emp['5'] }
 
                 console.log("oferta", oferta);
 
