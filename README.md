@@ -1,4 +1,10 @@
-﻿### Dependências necessárias
+﻿### Integrantes
+ 
+ Alen Kaleb
+ Marcus Fabricio
+ Willian Azevedo
+ 
+ ﻿### Dependências necessárias
 
 Os softwares necessários para rodar o app são:
 
